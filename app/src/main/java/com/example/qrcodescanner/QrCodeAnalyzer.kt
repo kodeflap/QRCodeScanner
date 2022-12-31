@@ -1,6 +1,8 @@
 package com.example.qrcodescanner
 
 import android.graphics.ImageFormat
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.zxing.*
@@ -8,15 +10,20 @@ import com.google.zxing.common.HybridBinarizer
 import java.nio.ByteBuffer
 
 
-class QrCodeAnalyzer(private val onQrCodeScanned:(String) -> Unit): ImageAnalysis.Analyzer {
+class QrCodeAnalyzer(
+    private val onQrCodeScanned:
+        (String) -> Unit
+) : ImageAnalysis.Analyzer {
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private val supportedImage = listOf(
         ImageFormat.YUV_420_888,
         ImageFormat.YUV_422_888,
         ImageFormat.YUV_444_888,
     )
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun analyze(image: ImageProxy) {
 
         if(image.format in supportedImage)
@@ -57,8 +64,7 @@ class QrCodeAnalyzer(private val onQrCodeScanned:(String) -> Unit): ImageAnalysi
         }
     }
 
-    private val ByteBuffer.toByteArray(): ByteArray
-    {
+    private fun ByteBuffer.toByteArray() : ByteArray {
         rewind()
         return ByteArray(remaining()).also {
             get(it)
